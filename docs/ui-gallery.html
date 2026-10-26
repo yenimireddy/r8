@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>R8 UI mock gallery</title>
+  <style>
+    :root { --bg: #f6f7f5; --ink: #14201a; --muted: #5c6b63; --line: #d8ddd9; --accent: #0F6B4C; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Segoe UI", system-ui, sans-serif; background: var(--bg); color: var(--ink); }
+    header { padding: 28px 24px 12px; max-width: 1200px; margin: 0 auto; }
+    header h1 { margin: 0 0 8px; font-size: 28px; }
+    header p { margin: 0; color: var(--muted); max-width: 60ch; line-height: 1.45; }
+    .note { margin-top: 12px; padding: 12px 14px; border: 1px solid var(--line); background: #fff; border-radius: 8px; font-size: 14px; color: var(--muted); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; padding: 20px 24px 48px; max-width: 1200px; margin: 0 auto; }
+    figure { margin: 0; background: #fff; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+    figure img { display: block; width: 100%; height: auto; background: #eee; }
+    figcaption { padding: 12px 14px 14px; }
+    figcaption strong { display: block; margin-bottom: 4px; }
+    figcaption span { color: var(--muted); font-size: 13px; line-height: 1.35; }
+    .flow { max-width: 1200px; margin: 0 auto; padding: 0 24px 8px; font-size: 14px; color: var(--muted); }
+    .flow code { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>R8 — screen mockups</h1>
+    <p>Visual previews matching the Phase 1 Flutter mock prototype. These are design mock images (not live device captures). Open this file in a browser, or drop the JPGs from <code>ui-mocks/</code> into Canva.</p>
+    <div class="note">Login any 10-digit phone · OTP <strong>123456</strong> · Bottom tabs: Discover · Jobs · Chat · Account</div>
+  </header>
+  <p class="flow">Flow: <code>Login → OTP → Discover → Profile/Chat → Jobs → Offer dual-accept → Complete/Review → Account</code></p>
+  <div class="grid">
+    <figure>
+      <img src="ui-mocks/r8-01-login.jpg" alt="Login" />
+      <figcaption><strong>1. Login</strong><span>Mobile number entry, Send OTP</span></figcaption>
+    </figure>
+    <figure>
+      <img src="ui-mocks/r8-02-otp.jpg" alt="OTP" />
+      <figcaption><strong>2. Verify OTP</strong><span>Mock code 123456</span></figcaption>
+    </figure>
+    <figure>
+      <img src="ui-mocks/r8-03-discover.jpg" alt="Discover" />
+      <figcaption><strong>3. Discover</strong><span>Filter workers by area &amp; category</span></figcaption>
+    </figure>
+    <figure>
+      <img src="ui-mocks/r8-04-profile.jpg" alt="Profile" />
+      <figcaption><strong>4. Worker profile</strong><span>Public location, Chat without connection</span></figcaption>
+    </figure>
+    <figure>
+      <img src="ui-mocks/r8-05-jobs.jpg" alt="Jobs" />
+      <figcaption><strong>5. Jobs</strong><span>Your jobs + open jobs, Post job FAB</span></figcaption>
+    </figure>
+    <figure>
+      <img src="ui-mocks/r8-09-create-job.jpg" alt="Create job" />
+      <figcaption><strong>6. Post a job</strong><span>Fixed / negotiable / quote</span></figcaption>
+    </figure>
+    <figure>
+      <img src="ui-mocks/r8-06-job-detail.jpg" alt="Job detail" />
+      <figcaption><strong>7. Job detail &amp; offers</strong><span>Accept / decline; dual acceptance</span></figcaption>
+    </figure>
+    <figure>
+      <img src="ui-mocks/r8-11-chat-list.jpg" alt="Chat list" />
+      <figcaption><strong>8. Chat inbox</strong><span>Conversations list</span></figcaption>
+    </figure>
+    <figure>
+      <img src="ui-mocks/r8-07-chat.jpg" alt="Chat thread" />
+      <figcaption><strong>9. Chat thread</strong><span>Banner: chat ≠ booking</span></figcaption>
+    </figure>
+    <figure>
+      <img src="ui-mocks/r8-08-account.jpg" alt="Account" />
+      <figcaption><strong>10. Account</strong><span>Profile, notifications, admin, logout</span></figcaption>
+    </figure>
+    <figure>
+      <img src="ui-mocks/r8-10-edit-profile.jpg" alt="Edit profile" />
+      <figcaption><strong>11. Edit profile</strong><span>PIN visibility + worker fields</span></figcaption>
+    </figure>
+  </div>
+</body>
+</html>
