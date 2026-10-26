@@ -16,7 +16,7 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
   final _location = TextEditingController(text: 'Mandasa (general area)');
   final _amount = TextEditingController();
   final _schedule = TextEditingController();
-  String _category = categories.first;
+  String _category = serviceCategories.first;
   PriceMode _priceMode = PriceMode.fixed;
   DurationType _duration = DurationType.fullDay;
   String? _error;
@@ -77,7 +77,7 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
           const SizedBox(height: 12),
           DropdownButtonFormField<String>(
             value: _category,
-            items: categories
+            items: serviceCategories
                 .map((c) => DropdownMenuItem(value: c, child: Text(c)))
                 .toList(),
             onChanged: (v) => setState(() => _category = v!),

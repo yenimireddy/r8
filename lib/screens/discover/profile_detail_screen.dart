@@ -81,15 +81,18 @@ class ProfileDetailScreen extends StatelessWidget {
               child: FilledButton.icon(
                 icon: const Icon(Icons.chat),
                 label: const Text('Chat (no connection needed)'),
-                onPressed: () {
+                onPressed: () async {
                   try {
-                    final c = store.startChat(u.id);
+                    final c = await store.startChat(u.id);
+                    if (!context.mounted) return;
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (_) => ChatScreen(store: store, conversationId: c.id),
+                        builder: (_) =>
+                            ChatScreen(store: store, conversationId: c.id),
                       ),
                     );
                   } catch (e) {
+                    if (!context.mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('$e')),
                     );

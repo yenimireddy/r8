@@ -3,17 +3,7 @@ import 'package:uuid/uuid.dart';
 import '../models/models.dart';
 
 const mockOtp = '123456';
-const categories = [
-  'Cleaner',
-  'Cook',
-  'Maid',
-  'Plumber',
-  'Electrician',
-  'Carpenter',
-  'Painter',
-  'Driver',
-  'Construction labour',
-];
+const categories = serviceCategories;
 
 class MockStore extends ChangeNotifier {
   final _uuid = const Uuid();

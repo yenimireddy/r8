@@ -101,7 +101,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           Text('Worker details (optional — same account can hire & offer)', style: Theme.of(context).textTheme.titleSmall),
           Wrap(
             spacing: 8,
-            children: categories
+            children: serviceCategories
                 .map((c) => FilterChip(
                       label: Text(c),
                       selected: _selectedCategories.contains(c),

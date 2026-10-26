@@ -141,16 +141,21 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                   child: const Text('Send offer'),
                 ),
                 TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     try {
-                      final c = store.startChat(job.ownerId, jobId: job.id);
+                      final c =
+                          await store.startChat(job.ownerId, jobId: job.id);
+                      if (!context.mounted) return;
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (_) => ChatScreen(store: store, conversationId: c.id),
+                          builder: (_) => ChatScreen(
+                              store: store, conversationId: c.id),
                         ),
                       );
                     } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('$e')));
                     }
                   },
                   child: const Text('Ask a question in chat'),
@@ -210,14 +215,16 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                 ),
                 TextField(controller: _review, decoration: const InputDecoration(labelText: 'Review')),
                 FilledButton(
-                  onPressed: () {
-                    final recipient = isOwner ? confirmed!.workerId : job.ownerId;
-                    final err = store.addReview(
+                  onPressed: () async {
+                    final recipient =
+                        isOwner ? confirmed!.workerId : job.ownerId;
+                    final err = await store.addReview(
                       jobId: job.id,
                       recipientId: recipient,
                       rating: _rating,
                       text: _review.text,
                     );
+                    if (!context.mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text(err ?? 'Review saved')),
                     );

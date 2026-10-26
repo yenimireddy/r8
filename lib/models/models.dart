@@ -1,3 +1,15 @@
+const serviceCategories = [
+  'Cleaner',
+  'Cook',
+  'Maid',
+  'Plumber',
+  'Electrician',
+  'Carpenter',
+  'Painter',
+  'Driver',
+  'Construction labour',
+];
+
 enum PriceMode { fixed, negotiable, quoteRequest }
 
 enum JobStatus {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../data/r8_store.dart';
+import '../../models/models.dart';
 import 'profile_detail_screen.dart';
 
 class DiscoverScreen extends StatefulWidget {
@@ -55,7 +56,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                     onSelected: (_) => setState(() => _category = null),
                   ),
                 ),
-                ...categories.map((c) => Padding(
+                ...serviceCategories.map((c) => Padding(
                       padding: const EdgeInsets.only(right: 8),
                       child: FilterChip(
                         label: Text(c),
