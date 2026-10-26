@@ -26,3 +26,16 @@ build/
 .DS_Store
 .env
 *.log
+
+# Firebase local
+# Keep stub google-services.json committed; replace locally after Firebase setup.
+# Do not commit real service-account keys:
+ios/Runner/GoogleService-Info.plist
+.env
+.env.*
+functions/node_modules/
+functions/lib/
+.firebase/
+*-firebase-adminsdk-*.json
+service-account*.json
+

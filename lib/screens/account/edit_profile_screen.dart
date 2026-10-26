@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../data/mock_store.dart';
+import '../../data/r8_store.dart';
 import '../../models/models.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key, required this.store});
-  final MockStore store;
+  final R8Store store;
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -52,7 +52,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.dispose();
   }
 
-  void _save() {
+  Future<void> _save() async {
     final me = widget.store.currentUser!.copy();
     me.displayName = _name.text.trim().isEmpty ? me.displayName : _name.text.trim();
     me.bio = _bio.text.trim();
@@ -69,8 +69,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     me.serviceArea = _serviceArea.text.trim();
     me.availability = _availability.text.trim();
     me.priceGuidance = _price.text.trim();
-    widget.store.updateProfile(me);
-    Navigator.pop(context);
+    await widget.store.updateProfile(me);
+    if (mounted) Navigator.pop(context);
   }
 
   @override

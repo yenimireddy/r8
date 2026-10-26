@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import '../../data/mock_store.dart';
+import '../../data/r8_store.dart';
 import '../../models/models.dart';
 import 'create_job_screen.dart';
 import 'job_detail_screen.dart';
 
 class JobsScreen extends StatelessWidget {
   const JobsScreen({super.key, required this.store});
-  final MockStore store;
+  final R8Store store;
 
   @override
   Widget build(BuildContext context) {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../data/mock_store.dart';
+import '../../data/r8_store.dart';
 import '../../models/models.dart';
 
 class AdminReportsScreen extends StatelessWidget {
   const AdminReportsScreen({super.key, required this.store});
-  final MockStore store;
+  final R8Store store;
 
   @override
   Widget build(BuildContext context) {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../data/mock_store.dart';
+import '../../data/r8_store.dart';
 import '../../models/models.dart';
 
 class CreateJobScreen extends StatefulWidget {
   const CreateJobScreen({super.key, required this.store});
-  final MockStore store;
+  final R8Store store;
 
   @override
   State<CreateJobScreen> createState() => _CreateJobScreenState();
@@ -32,13 +32,13 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
     super.dispose();
   }
 
-  void _submit() {
+  Future<void> _submit() async {
     if (_submitting) return;
     setState(() {
       _submitting = true;
       _error = null;
     });
-    final job = widget.store.createJob(
+    final job = await widget.store.createJob(
       title: _title.text,
       description: _desc.text,
       category: _category,

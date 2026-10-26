@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'data/mock_store.dart';
+
+import 'data/r8_store.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/shell/home_shell.dart';
 import 'theme/app_theme.dart';
 
 class R8App extends StatelessWidget {
-  const R8App({super.key, required this.store});
+  const R8App({super.key, required this.store, this.usingMock = false});
 
-  final MockStore store;
+  final R8Store store;
+  final bool usingMock;
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +18,10 @@ class R8App extends StatelessWidget {
       builder: (context, _) {
         return MaterialApp(
           title: 'R8',
-          debugShowCheckedModeBanner: false,
+          debugShowCheckedModeBanner: usingMock,
           theme: AppTheme.light,
           home: store.currentUser == null
-              ? LoginScreen(store: store)
+              ? LoginScreen(store: store, usingMock: usingMock)
               : HomeShell(store: store),
         );
       },

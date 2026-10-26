@@ -1,0 +1,150 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function profileDoc(uid) {
+      return get(/databases/$(database)/documents/profiles/$(uid)).data;
+    }
+
+    function isBlockedEither(a, b) {
+      return a in profileDoc(b).get('blockedUserIds', [])
+        || b in profileDoc(a).get('blockedUserIds', []);
+    }
+
+    // Public profiles — never store phone, homeAddress, or exactHomeGps here.
+    match /profiles/{uid} {
+      allow read: if signedIn();
+      allow create: if isSelf(uid)
+        && !('phone' in request.resource.data)
+        && !('homeAddress' in request.resource.data)
+        && !('exactHomeGps' in request.resource.data);
+      allow update: if (isSelf(uid) || isAdmin())
+        && !('phone' in request.resource.data)
+        && !('homeAddress' in request.resource.data)
+        && !('exactHomeGps' in request.resource.data)
+        && request.resource.data.uid == uid;
+      allow delete: if isAdmin();
+    }
+
+    // Private user data (phone etc.) — owner or admin only.
+    match /userPrivate/{uid} {
+      allow read, write: if isSelf(uid) || isAdmin();
+    }
+
+    match /admins/{uid} {
+      allow read: if isSelf(uid) || isAdmin();
+      allow write: if false; // set via console / Admin SDK only
+    }
+
+    match /jobs/{jobId} {
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && request.resource.data.ownerId == request.auth.uid
+        && request.resource.data.keys().hasAll([
+          'ownerId', 'title', 'description', 'category',
+          'approxLocation', 'priceMode', 'durationType', 'status', 'createdAt'
+        ])
+        && request.resource.data.status == 'open'
+        && !('exactHomeGps' in request.resource.data)
+        && !('homeAddress' in request.resource.data);
+      // Lifecycle transitions that change booking state go through Cloud Functions.
+      allow update: if signedIn() && (
+        (resource.data.ownerId == request.auth.uid
+          && request.resource.data.ownerId == resource.data.ownerId
+          && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly([
+                'title', 'description', 'scheduleNote', 'photoNote',
+                'noShowReported', 'hasDispute', 'updatedAt'
+              ]))
+        || isAdmin()
+      );
+      allow delete: if isAdmin();
+    }
+
+    match /offers/{offerId} {
+      allow read: if signedIn() && (
+        resource.data.workerId == request.auth.uid
+        || get(/databases/$(database)/documents/jobs/$(resource.data.jobId)).data.ownerId == request.auth.uid
+        || isAdmin()
+      );
+      allow create: if signedIn()
+        && request.resource.data.workerId == request.auth.uid
+        && request.resource.data.status == 'pending'
+        && request.resource.data.amount is number
+        && request.resource.data.amount > 0;
+      allow update, delete: if false; // Cloud Functions only
+    }
+
+    match /conversations/{conversationId} {
+      allow read: if signedIn()
+        && request.auth.uid in resource.data.participantIds;
+      allow create: if signedIn()
+        && request.auth.uid in request.resource.data.participantIds
+        && request.resource.data.participantIds.size() == 2
+        && !isBlockedEither(request.resource.data.participantIds[0], request.resource.data.participantIds[1]);
+      allow update: if signedIn()
+        && request.auth.uid in resource.data.participantIds
+        && request.resource.data.participantIds == resource.data.participantIds;
+      allow delete: if false;
+
+      match /messages/{messageId} {
+        allow read: if signedIn()
+          && request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.participantIds;
+        allow create: if signedIn()
+          && request.resource.data.senderId == request.auth.uid
+          && request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.participantIds
+          && get(/databases/$(database)/documents/conversations/$(conversationId)).data.get('blocked', false) == false
+          && request.resource.data.text is string
+          && request.resource.data.text.size() > 0
+          && request.resource.data.text.size() <= 2000;
+        allow update, delete: if false;
+      }
+    }
+
+    match /reviews/{reviewId} {
+      allow read: if signedIn();
+      allow create, update, delete: if false; // Cloud Functions only
+    }
+
+    match /reports/{reportId} {
+      allow read: if isAdmin()
+        || (signedIn() && resource.data.reporterId == request.auth.uid);
+      allow create: if signedIn()
+        && request.resource.data.reporterId == request.auth.uid
+        && request.resource.data.status == 'open'
+        && request.resource.data.reason is string
+        && request.resource.data.reason.size() <= 1000;
+      allow update: if isAdmin();
+      allow delete: if false;
+    }
+
+    match /notifications/{notificationId} {
+      allow read: if signedIn() && resource.data.recipientId == request.auth.uid;
+      allow update: if signedIn()
+        && resource.data.recipientId == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
+      allow create, delete: if false; // Functions / trusted writers
+    }
+
+    match /rateLimits/{docId} {
+      allow read, write: if false; // Functions only
+    }
+
+    match /audit/{eventId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+  }
+}

@@ -1,43 +1,51 @@
 # R8 — Local Services Marketplace
 
-Android-first Flutter prototype for discovering local workers, profiles, in-app chat, and job booking.
+Android-first Flutter app for discovering local workers, profiles, chat, and job booking.
 
-This repo is **Phase 1 (UI + mock data)** from BRD v1.1. Firebase Auth/Firestore/FCM are **not** wired yet.
+**v0.2** — Firebase-ready for a ~1k user pilot (Auth, Firestore, Rules, Functions, Crashlytics).  
+Falls back to **mock mode** until you complete [SETUP_YOU_MUST_DO.md](SETUP_YOU_MUST_DO.md).
 
-## What works (mock)
-
-- Mobile + OTP login (any 10-digit number, OTP `123456`)
-- Dual-role account (hire + offer on one account)
-- Profiles with public general location (town/district/state; optional PIN; no home address/GPS)
-- Discover / filter by category and area
-- Jobs: fixed, negotiable, request-a-quote; offers; dual acceptance; completion; reviews
-- Chat without mutual connection; block / report
-- In-app admin report queue (mock)
-- Payment disclaimer (payments outside R8)
-
-## Run (when Flutter works)
+## Quick start
 
 ```bash
 flutter pub get
+
+# Demo without Firebase
+flutter run --dart-define=USE_MOCK=true
+
+# Production (after SETUP_YOU_MUST_DO.md)
 flutter run
 ```
 
-## Mock credentials
+Mock OTP: any 10-digit phone + `123456`.
 
-| Field | Value |
-|-------|--------|
-| Phone | any 10 digits, e.g. `9876543210` |
-| OTP | `123456` |
+## Architecture
 
-## Project layout
+| Layer | Implementation |
+|-------|----------------|
+| Android app | Flutter (`lib/`) |
+| Auth | Firebase Phone Auth (mock OTP in USE_MOCK) |
+| Database | Cloud Firestore |
+| Security | `firestore.rules` + `storage.rules` |
+| Business rules | Cloud Functions (`functions/`) — dual-accept, completion, reviews |
+| Crashes | Firebase Crashlytics |
+| Admin | In-app report queue + `admins/{uid}` docs |
 
-- `lib/` — Flutter app (mock store + screens)
-- `admin/` — minimal static admin console mock
-- `test/` — widget/smoke tests
+Sensitive booking transitions are **not** trusted from the client alone.
 
-## Not in this prototype
+## Repo map
 
-- Real OTP / Firebase / push notifications
-- In-app payments
-- iOS target
-- Production security rules
+- `lib/` — Flutter UI + `FirebaseR8Store` / mock  
+- `functions/` — TypeScript Cloud Functions (region `asia-south1`)  
+- `firestore.rules` / `storage.rules` / `firebase.json`  
+- `SETUP_YOU_MUST_DO.md` — **your** Firebase console steps  
+- `OPS.md` — ops runbook  
+- `docs/ui-mocks/` — UI mock images  
+
+## What you must do
+
+Only you can create the Firebase project, enable Phone Auth (Blaze), add SHA-1, download `google-services.json`, run `flutterfire configure`, and deploy rules/functions. Follow **SETUP_YOU_MUST_DO.md**.
+
+## Disclaimer
+
+R8 records discovery, chat, and agreed job terms. Off-platform payment is not guaranteed by R8. See BRD.

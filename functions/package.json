@@ -1,0 +1,21 @@
+{
+  "name": "r8-functions",
+  "description": "R8 Cloud Functions — offer dual-accept, completion, reviews, auth bootstrap",
+  "engines": { "node": "20" },
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions,firestore,auth",
+    "deploy": "firebase deploy --only functions",
+    "lint": "eslint --ext .ts src"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.7.0",
+    "firebase-functions": "^6.1.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  },
+  "private": true
+}

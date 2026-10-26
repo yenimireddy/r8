@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../data/mock_store.dart';
+import '../../data/r8_store.dart';
 import 'profile_detail_screen.dart';
 
 class DiscoverScreen extends StatefulWidget {
   const DiscoverScreen({super.key, required this.store});
-  final MockStore store;
+  final R8Store store;
 
   @override
   State<DiscoverScreen> createState() => _DiscoverScreenState();

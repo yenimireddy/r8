@@ -1,23 +1,18 @@
-# BRD coverage (this prototype)
+# BRD coverage (v0.2 Firebase-ready)
 
-| ID | Status |
-|----|--------|
-| FR-01 Auth OTP | Mock (OTP 123456) |
-| FR-02 Universal profile | Yes |
-| FR-03 Dual-role | Yes |
-| FR-04 Worker profile | Yes |
-| FR-05 Public location | Yes (no home/GPS) |
-| FR-06 Location entry | Manual only |
-| FR-07 Discovery | Yes |
-| FR-08–11 Jobs/offers/dual accept | Yes |
-| FR-12–13 Chat + privacy | Yes |
-| FR-14 Scheduling types | Yes (enum) |
-| FR-15–18 Lifecycle/completion/reviews/cancel | Yes (mock) |
-| FR-19 Reports/blocking | Yes |
-| FR-20 Admin | In-app mock + `admin/index.html` |
-| FR-21 Notifications | In-app list (not FCM) |
-| FR-22 Account controls | Yes |
-| FR-23 Audit | In-memory list |
-| FR-24 Errors / duplicate submit | Basic |
+| ID | Mock | Firebase |
+|----|------|----------|
+| FR-01 Auth OTP | Yes (123456) | Phone Auth (you enable) |
+| FR-02–06 Profile / location | Yes | `profiles` + Rules (no phone/home/GPS) |
+| FR-07 Discovery | Yes | Profile listeners + client filter |
+| FR-08–11 Jobs / dual accept | Yes | Client create + **Functions** accept/confirm |
+| FR-12–13 Chat / privacy | Yes | Firestore messages + block |
+| FR-14–18 Lifecycle / reviews | Yes | Functions for completion / reviews |
+| FR-19 Reports / block | Yes | `reports` + Rules |
+| FR-20 Admin | In-app | `admins/{uid}` + `resolveReport` |
+| FR-21 Notifications | In-app list | Firestore `notifications` (+ FCM wiring next) |
+| FR-22 Account controls | Yes | Profile + deletion flag |
+| FR-23 Audit | Memory | `audit` collection (Functions) |
+| FR-24 Errors | Basic | Basic + Crashlytics |
 
-**Not included:** Firebase, real OTP/SMS, FCM push, image upload, iOS, payments.
+**You still must:** complete SETUP_YOU_MUST_DO.md before real users.

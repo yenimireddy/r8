@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../data/mock_store.dart';
+import '../../data/r8_store.dart';
 import '../../models/models.dart';
 import '../chat/chat_screen.dart';
 
 class ProfileDetailScreen extends StatelessWidget {
   const ProfileDetailScreen({super.key, required this.store, required this.userId});
-  final MockStore store;
+  final R8Store store;
   final String userId;
 
   @override

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../data/mock_store.dart';
+import '../../data/r8_store.dart';
 import '../admin/admin_reports_screen.dart';
 import 'edit_profile_screen.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key, required this.store});
-  final MockStore store;
+  final R8Store store;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class AccountScreen extends StatelessWidget {
               ListTile(
                 leading: const Icon(Icons.logout),
                 title: const Text('Log out'),
-                onTap: store.logout,
+                onTap: () => store.logout(),
               ),
               const Divider(),
               const ListTile(title: Text('Notifications', style: TextStyle(fontWeight: FontWeight.bold))),

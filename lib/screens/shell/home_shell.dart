@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../data/mock_store.dart';
+import '../../data/r8_store.dart';
 import '../account/account_screen.dart';
 import '../chat/conversations_screen.dart';
 import '../discover/discover_screen.dart';
@@ -7,7 +7,7 @@ import '../jobs/jobs_screen.dart';
 
 class HomeShell extends StatefulWidget {
   const HomeShell({super.key, required this.store});
-  final MockStore store;
+  final R8Store store;
 
   @override
   State<HomeShell> createState() => _HomeShellState();

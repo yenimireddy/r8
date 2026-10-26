@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../data/mock_store.dart';
+import '../../data/r8_store.dart';
 import '../../models/models.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key, required this.store, required this.conversationId});
-  final MockStore store;
+  final R8Store store;
   final String conversationId;
 
   @override

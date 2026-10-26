@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../data/mock_store.dart';
+
+import '../../data/r8_store.dart';
 
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({super.key, required this.store, required this.phone});
-  final MockStore store;
+  const OtpScreen({
+    super.key,
+    required this.store,
+    required this.phone,
+    required this.verificationId,
+    this.usingMock = false,
+  });
+
+  final R8Store store;
   final String phone;
+  final String verificationId;
+  final bool usingMock;
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -28,10 +38,27 @@ class _OtpScreenState extends State<OtpScreen> {
       _submitting = true;
       _error = null;
     });
-    final ok = widget.store.verifyOtp(widget.phone, _otp.text.trim());
+
+    final code = _otp.text.trim();
+    bool ok;
+    if (widget.usingMock) {
+      final mock = widget.store;
+      if (mock is MockR8Store) mock.setPendingPhone(widget.phone);
+      ok = await widget.store.verifyOtp(widget.phone, code);
+      if (!ok && widget.store is MockR8Store) {
+        // R8Store.verifyOtp path via adapter
+        ok = await (widget.store as MockR8Store).verifyOtp(widget.phone, code);
+      }
+    } else {
+      ok = await widget.store.confirmPhoneAuth(
+        verificationId: widget.verificationId,
+        smsCode: code,
+      );
+    }
+
     if (!ok) {
       setState(() {
-        _error = widget.store.lastError;
+        _error = widget.store.lastError ?? 'Invalid OTP';
         _submitting = false;
       });
       return;
@@ -41,6 +68,7 @@ class _OtpScreenState extends State<OtpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final digits = widget.phone.replaceAll(RegExp(r'\D'), '');
     return Scaffold(
       appBar: AppBar(title: const Text('Verify OTP')),
       body: Padding(
@@ -48,7 +76,12 @@ class _OtpScreenState extends State<OtpScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Code sent to +91 ${widget.phone.replaceAll(RegExp(r"\\D"), "")}'),
+            Text('Code sent to +91 $digits'),
+            if (widget.usingMock)
+              const Padding(
+                padding: EdgeInsets.only(top: 8),
+                child: Text('Mock OTP: 123456'),
+              ),
             const SizedBox(height: 16),
             TextField(
               controller: _otp,
@@ -61,7 +94,10 @@ class _OtpScreenState extends State<OtpScreen> {
             ),
             if (_error != null) ...[
               const SizedBox(height: 8),
-              Text(_error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+              Text(
+                _error!,
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
             ],
             const Spacer(),
             FilledButton(
